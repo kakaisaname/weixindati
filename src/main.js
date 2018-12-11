@@ -2,7 +2,7 @@ import Vue from "vue";
 import App from "./App.vue";
 import router from "./router";
 import store from "./store";
-
+import "./assets/style/common.less"; //引入背景图
 Vue.config.productionTip = false;
 
 new Vue({

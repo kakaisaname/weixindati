@@ -1,26 +1,28 @@
 import Vue from "vue";
 import Router from "vue-router";
-import Home from "./views/Home.vue";
-
+import App from './App'
 Vue.use(Router);
 
 export default new Router({
-  mode: "history",
+  mode: "history", //默认是hash模式
   base: process.env.BASE_URL,
   routes: [
     {
       path: "/",
-      name: "home",
-      component: Home
-    },
-    {
-      path: "/about",
-      name: "about",
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () =>
-        import(/* webpackChunkName: "about" */ "./views/About.vue")
+      component: App,
+      children: [{
+      path: '',
+        component: () =>
+        import(/* webpackChunkName: "about" */ "./views/Home/home.vue")
+      }, {
+          path: '/item',
+          component: () =>
+          import(/* webpackChunkName: "about" */ "./views/Item/item.vue")
+      }, {
+          path: '/score',
+          component: () =>
+          import(/* webpackChunkName: "about" */ "./views/Score/score.vue")
+      }]
     }
   ]
 });
