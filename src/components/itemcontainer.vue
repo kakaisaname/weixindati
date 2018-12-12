@@ -57,43 +57,38 @@ export default {
 		  } 	  	  	
 	},
 	mounted () {
-		if (!this.timerc) {
+			this.countdown = 10;
+			this.buttonName = "倒计时(" + this.countdown + ")";
+			this.timerc = null;
+			 if (!this.timerc) {
 				this.timerc = setInterval(() => {
-					if (this.countdown > 0 && this.countdown <= 60) {
-					this.countdown--;
-					if (this.countdown !== 0) {
-						this.buttonName = "倒计时(" + this.countdown + ")";
-					} else {
-						clearInterval(this.timerc);
-						this.buttonName = "获取验证码";
-						this.countdown = 60;
-						this.timerc = null;
-						this.codeDisabled = false;
-					}
-					}
+						if (this.countdown !== 0) {
+							this.countdown--;
+							this.buttonName = "倒计时(" + this.countdown + ")";
+						} else {
+							return false;
+						}
 				}, 1000)
-        	} 
+        	}
 	},
   	methods: {
   		...mapActions([
   			'addNum', 'initializeData',
   		]),
   		//点击下一题
-  		nextItem(){ 
+  		nextItem(){
+			clearInterval(this.timerc);
+			this.countdown = 10;
+			this.buttonName = "倒计时(" + this.countdown + ")";
+			this.timerc = null;
 			 if (!this.timerc) {
 				this.timerc = setInterval(() => {
-					if (this.countdown > 0 && this.countdown <= 60) {
-					this.countdown--;
-					if (this.countdown !== 0) {
-						this.buttonName = "倒计时(" + this.countdown + ")";
-					} else {
-						clearInterval(this.timerc);
-						this.buttonName = "获取验证码";
-						this.countdown = 60;
-						this.timerc = null;
-						this.codeDisabled = false;
-					}
-					}
+						if (this.countdown !== 0) {
+							this.countdown--;
+							this.buttonName = "倒计时(" + this.countdown + ")";
+						} else {
+							return false;
+						}
 				}, 1000)
         	} 
   			if (this.choosedNum !== null) {
