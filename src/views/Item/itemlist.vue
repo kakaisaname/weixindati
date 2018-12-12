@@ -112,7 +112,7 @@ export default {
 	  	submitAnswer(){
 	  		if (this.choosedNum !== null) {
 	  			this.addNum(this.choosedId)
-	  			clearInterval(this.timer)
+	  			clearInterval(this.timerc)
 	  			this.$router.push('score')
   			}else{
   				alert('您还没有选择答案哦')
@@ -182,7 +182,8 @@ export default {
 		top: 25rem;
     	background-image: url(../../assets/images/2-2.png);
     }
-    .submit_item{ //提交按钮
+	.submit_item{ //提交按钮
+		top: 25rem;
     	background-image: url(../../assets/images/3-1.png);
     }
     .item_list_container{
