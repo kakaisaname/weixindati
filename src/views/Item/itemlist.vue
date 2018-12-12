@@ -1,14 +1,9 @@
 <template>
   	<section>
     	<header class="top_tips">
-    		<span class="num_tip" v-if="fatherComponent == 'home'">{{level}}</span>
-    		<span class="num_tip" v-if="fatherComponent == 'item'">题目{{itemNum}}</span>
+    		<span class="num_tip">题目{{itemNum}}</span>
     	</header>
-    	<div v-if="fatherComponent == 'home'" >
-    		<div class="home_logo item_container_style"></div>
-    		<router-link to="item" class="start button_style" ></router-link>
-    	</div>
-    	<div v-if="fatherComponent == 'item'" > <!--进入题目页面-->
+    	<div> <!--进入题目页面-->
     		<div class="item_back item_container_style">
     			<div class="item_list_container" v-if="itemDetail.length >0"> <!--获取题目的数量-->
     				<header class="item_title">{{itemDetail[itemNum-1].topic_name}}    {{buttonName}}</header> <!--获取题目的标题-->
@@ -31,15 +26,17 @@
 <script>
 import { mapState, mapActions } from 'vuex'
 export default {
-	name: 'itemcontainer',
+	name: 'itemlist',
 	data() {
 		return {
 			itemId: null, //题目ID
 			choosedNum: null, //选中答案索引
 			choosedId:null, //选中答案id
-			countdown:60,
-			timerc: null,
-			buttonName:''
+			countdown:null,	//倒计时时间
+			timerc: null,	//计时器
+			buttonName:'',	//倒计时文字显示内容
+			timecome:false,	
+			
 		}
 	},
   	props:['fatherComponent'],
@@ -57,47 +54,45 @@ export default {
 		  } 	  	  	
 	},
 	mounted () {
-			this.countdown = 10;
-			this.buttonName = "倒计时(" + this.countdown + ")";
-			this.timerc = null;
-			 if (!this.timerc) {
-				this.timerc = setInterval(() => {
-						if (this.countdown !== 0) {
-							this.countdown--;
-							this.buttonName = "倒计时(" + this.countdown + ")";
-						} else {
-							return false;
-						}
-				}, 1000)
-        	}
+		this.timedown();
 	},
   	methods: {
   		...mapActions([
   			'addNum', 'initializeData',
-  		]),
+		  ]),
+		  timedown(){ //倒计时方法 会执行一次
+			this.countdown = 5;
+			this.buttonName = "倒计时(" + this.countdown + ")";
+			this.timerc = setInterval(() => {
+				this.countdown--;
+				this.buttonName = "倒计时(" + this.countdown + ")";
+				if (this.countdown ==0) {
+					clearInterval(this.timerc);
+					this.buttonName = ''
+					alert("答题时间到");
+					this.timecome = true
+					return false;
+				}		
+			}, 1000)	
+		  },
   		//点击下一题
   		nextItem(){
-			clearInterval(this.timerc);
-			this.countdown = 10;
-			this.buttonName = "倒计时(" + this.countdown + ")";
-			this.timerc = null;
-			 if (!this.timerc) {
-				this.timerc = setInterval(() => {
-						if (this.countdown !== 0) {
-							this.countdown--;
-							this.buttonName = "倒计时(" + this.countdown + ")";
-						} else {
-							return false;
-						}
-				}, 1000)
-        	} 
-  			if (this.choosedNum !== null) {
-	  			this.choosedNum = null;
-	  			//保存答案, 题目索引加一，跳到下一题
-	  			this.addNum(this.choosedId)
-  			}else{
-  				alert('您还没有选择答案哦')
-  			}
+			//判断时间到了没
+			if (this.timecome == false) {  //false
+				clearInterval(this.timerc);
+			//执行timedown方法
+				this.timedown()
+				if (this.choosedNum !== null) {
+					this.choosedNum = null;
+					//保存答案, 题目索引加一，跳到下一题
+					this.addNum(this.choosedId)
+				}else{
+					alert('您还没有选择答案哦')
+				}
+			} else {
+				alert('答题时间到,不能答题了');
+				return false;
+			}
   		},
   		//索引0-3对应答案A-B  *****************
 	  	chooseType: type => {
@@ -144,7 +139,7 @@ export default {
 		width: 3.25rem;		//图片宽度
 		top: -1.3rem;	    //向上减1.3rem 相当于height: 6.05rem;			
 		right: 1.6rem;		//相对于右边界的距离
-		background: url(../assets/images/WechatIMG2.png) no-repeat; //背景图
+		background: url(../../assets/images/WechatIMG2.png) no-repeat; //背景图
 		background-size: 100% 100%; //规定背景图像的尺寸
 		z-index: 10;
 		.num_tip{
@@ -168,14 +163,8 @@ export default {
 		top: 4.1rem;  		 //向下4.1rem
 		left: 1rem;			 //距离左边1rem
 	}
-	
-	.home_logo{
-		background-image: url(../assets/images/1-2.png); //背景图片
-		background-size: 13.142rem 100%;  //13.142rem 距离左边为13.142rem
-		background-position: right center;  //定位
-	}
 	.item_back{	//背景图
-		background-image: url(../assets/images/2-1.png);
+		background-image: url(../../assets/images/2-1.png);
 		background-size: 100% 100%;
 	}
 	.button_style{
@@ -189,15 +178,12 @@ export default {
         margin-left: -2.4rem; //向左靠点
         background-repeat: no-repeat;
 	}
-	.start{
-        background-image: url(../assets/images/1-4.png);  //开始按钮图片
-    }
     .next_item{  //下一题
 		top: 25rem;
-    	background-image: url(../assets/images/2-2.png);
+    	background-image: url(../../assets/images/2-2.png);
     }
     .submit_item{ //提交按钮
-    	background-image: url(../assets/images/3-1.png);
+    	background-image: url(../../assets/images/3-1.png);
     }
     .item_list_container{
     	position: absolute;

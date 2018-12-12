@@ -17,7 +17,7 @@ export default new Router({
       }, {
           path: '/item',
           component: () =>
-          import(/* webpackChunkName: "about" */ "./views/Item/item.vue")
+          import(/* webpackChunkName: "about" */ "./views/Item/itemlist.vue")
       }, {
           path: '/score',
           component: () =>
